@@ -3,6 +3,7 @@ package com.my.blog.website.utils;
 import com.my.blog.website.exception.TipException;
 import com.my.blog.website.constant.WebConst;
 import com.my.blog.website.controller.admin.AttachController;
+import com.my.blog.website.interceptor.DBComm;
 import com.my.blog.website.modal.Vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
 import org.commonmark.node.Node;
@@ -73,7 +74,7 @@ public class TaleUtils {
      * @return
      */
     public static int getCurrentTime() {
-        return (int) (new Date().getTime() / 1000);
+        return (int) (System.currentTimeMillis() / 1000);
     }
 
     /**
@@ -176,6 +177,7 @@ public class TaleUtils {
         return hexString.toString();
     }
 
+
     /**
      * 获取新的数据源
      *
@@ -184,17 +186,11 @@ public class TaleUtils {
     public static DataSource getNewDataSource() {
         if (newDataSource == null) synchronized (TaleUtils.class) {
             if (newDataSource == null) {
-                Properties properties = TaleUtils.getPropFromFile("application-jdbc.properties");
-                if (properties.size() == 0) {
-                    return newDataSource;
-                }
                 DriverManagerDataSource managerDataSource = new DriverManagerDataSource();
-                //        TODO 对不同数据库支持
                 managerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-                managerDataSource.setPassword(properties.getProperty("spring.datasource.password"));
-                String str = "jdbc:mysql://" + properties.getProperty("spring.datasource.url") + "/" + properties.getProperty("spring.datasource.dbname") + "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-                managerDataSource.setUrl(str);
-                managerDataSource.setUsername(properties.getProperty("spring.datasource.username"));
+                managerDataSource.setPassword(DBComm.getPwd());
+                managerDataSource.setUrl(DBComm.getDbUrl());
+                managerDataSource.setUsername(DBComm.getUserName());
                 newDataSource = managerDataSource;
             }
         }

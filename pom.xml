@@ -6,7 +6,7 @@
     <artifactId>crazy-blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>crazy-blog</name>
     <description>My Java Blog project for Spring Boot</description>
